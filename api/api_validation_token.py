@@ -8,6 +8,8 @@ def validation_token():
     'token': credentials.token
   }
   response = requests.get(url=url,params=params)
-  if(response.status_code != 200):
+  if(response.status_code == 208):
     raise ValidationErr(response.status_code)
+  if(response.status_code != 200):
+    raise Exception('Invalid response')
   return response.json()
