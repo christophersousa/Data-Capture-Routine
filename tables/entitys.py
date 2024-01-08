@@ -1,8 +1,9 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, UUID
+from sqlalchemy import Column, Integer, String, ForeignKey, UUID, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
+#  Tables
 
 class Deals(Base):
   __tablename__ = 'deal'
@@ -51,3 +52,47 @@ class Organization(Base):
   date_create = Column(String)
   date_update = Column(String)
   document = Column(String)
+
+#  Table relationship
+  
+#  Organization
+class OrganizationAddressRl(Base):
+  __tablename__ = 'organization_address_rl'
+  address_id = Column(UUID, nullable=False)
+  organization_id = Column(UUID, nullable=False)
+  is_active = Column(Boolean)
+  date_create = Column(String)
+  date_update = Column(String)
+
+class OrganizationContactRl(Base):
+  __tablename__ = 'organization_contact_rl'
+  organization_id = Column(UUID, nullable=False)
+  contact_id = Column(UUID, nullable=False)
+  is_active = Column(Boolean)
+  date_create = Column(String)
+  date_update = Column(String)
+
+class OrganizationDealsRl(Base):
+  __tablename__ = 'organization_deal_rl'
+  organization_id = Column(UUID, nullable=False)
+  deal_id = Column(UUID, nullable=False)
+  is_active = Column(Boolean)
+  date_create = Column(String)
+  date_update = Column(String)
+
+#  User
+class UserAddressRl(Base):
+  __tablename__ = 'user_address_rl'
+  address_id = Column(UUID, nullable=False)
+  contact_id = Column(UUID, nullable=False)
+  is_active = Column(Boolean)
+  date_create = Column(String)
+  date_update = Column(String)
+
+class UserDealRl(Base):
+  __tablename__ = 'user_address_rl'
+  user_id = Column(UUID, nullable=False)
+  deal_id = Column(UUID, nullable=False)
+  is_active = Column(Boolean)
+  date_create = Column(String)
+  date_update = Column(String)
