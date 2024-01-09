@@ -31,3 +31,33 @@ def request_organization(page:int):
   if(response.status_code != 200):
     raise Exception('Invalid response in list_deals')
   return response.json()
+
+def request_activities(page:int, dateStart:str, dateEnd:str):
+  print(f"Request deals page: {page}")
+  url = f"{credentials.url}/activities"
+  params = {
+    'token': credentials.token,
+    'limit': 200,
+    'page': page,
+    'start_date': dateStart,
+    'end_date': dateEnd
+  }
+  response = requests.get(url=url,headers=headers,params=params)
+  if(response.status_code != 200):
+    raise Exception('Invalid response in list_deals')
+  return response.json()
+
+
+def request_contacts(page:int, q:str):
+  print(f"Request deals page: {page}")
+  url = f"{credentials.url}/contacts"
+  params = {
+    'token': credentials.token,
+    'limit': 200,
+    'page': page,
+    'q': q
+  }
+  response = requests.get(url=url,headers=headers,params=params)
+  if(response.status_code != 200):
+    raise Exception('Invalid response in list_deals')
+  return response.json()
