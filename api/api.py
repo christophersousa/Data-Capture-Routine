@@ -16,11 +16,15 @@ def request_deals(page:int, dateStart:str, dateEnd:str):
   }
   response = requests.get(url=url,headers=headers,params=params)
   if(response.status_code != 200):
-    raise Exception('Invalid response in list_deals')
+    return{
+      "total": 0,
+      "has_more": False,
+      "deals": []
+    }
   return response.json()
 
 def request_organization(page:int):
-  print(f"Request deals page: {page}")
+  print(f"Request organization page: {page}")
   url = f"{credentials.url}/organizations"
   params = {
     'token': credentials.token,
@@ -29,11 +33,15 @@ def request_organization(page:int):
   }
   response = requests.get(url=url,headers=headers,params=params)
   if(response.status_code != 200):
-    raise Exception('Invalid response in list_deals')
+    return{
+      "total": 0,
+      "has_more": False,
+      "organizations": []
+    }
   return response.json()
 
 def request_activities(page:int, dateStart:str, dateEnd:str):
-  print(f"Request deals page: {page}")
+  print(f"Request activities page: {page}")
   url = f"{credentials.url}/activities"
   params = {
     'token': credentials.token,
@@ -44,12 +52,14 @@ def request_activities(page:int, dateStart:str, dateEnd:str):
   }
   response = requests.get(url=url,headers=headers,params=params)
   if(response.status_code != 200):
-    raise Exception('Invalid response in list_deals')
+    return{
+      'activities': []
+    }
   return response.json()
 
 
 def request_contacts(page:int, q:str):
-  print(f"Request deals page: {page}")
+  print(f"Request contacts page: {page}")
   url = f"{credentials.url}/contacts"
   params = {
     'token': credentials.token,
@@ -59,5 +69,9 @@ def request_contacts(page:int, q:str):
   }
   response = requests.get(url=url,headers=headers,params=params)
   if(response.status_code != 200):
-    raise Exception('Invalid response in list_deals')
+     return{
+      "total": 0,
+      "has_more": False,
+      "contacts": []
+    }
   return response.json()
