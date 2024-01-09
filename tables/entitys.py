@@ -53,6 +53,16 @@ class Organization(Base):
   date_update = Column(String)
   document = Column(String)
 
+class Contact(Base):
+  __tablename__ = 'organization'
+  id = Column(UUID, primary_key=True, nullable=False)
+  contact_rd_id = Column(String)
+  name  = Column(String)
+  phone = Column(String)
+  email = Column(String)
+  date_create = Column(String)
+  date_update = Column(String)
+
 #  Table relationship
   
 #  Organization
