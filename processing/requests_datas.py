@@ -6,7 +6,7 @@ def list_deals(dateStart:str, dateEnd:str):
     deals_list.extend(response['deals'])
     if response['has_more']:
       page += 1
-      while True:
+      while page <=2:
         try:
           response = request_deals(page,dateStart,dateEnd)
           deals_list.extend(response['deals'])
@@ -24,7 +24,7 @@ def list_organizations():
     organizations_list.extend(response['organizations'])
     if response['has_more']:
       page += 1
-      while page <= 5:
+      while page <= 2:
         try:
           response = request_organization(page)
           organizations_list.extend(response['organizations'])
@@ -42,9 +42,9 @@ def list_activities(dateStart:str, dateEnd:str):
     activities_list.extend(response['activities'])
     if response['has_more']:
       page += 1
-      while page <= 5:
+      while page <= 2:
         try:
-          response = request_organization(page)
+          response = request_activities(page, dateStart, dateEnd)
           activities_list.extend(response['activities'])
           if not response['has_more']:
             break
