@@ -1,5 +1,5 @@
 from sqlite3 import IntegrityError
-from tables.entitys import Rating, Deals, Organization, Resume, Contact, Address
+from tables.entity import Rating, Deals, Organization, Resume, Contact, Address
 
 def add_rating(session, row):
     try:
