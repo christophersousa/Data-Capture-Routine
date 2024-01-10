@@ -32,7 +32,7 @@ class Resume(Base):
   report  = Column(String)
   date_create = Column(String)
   date_update = Column(String)
-  deal_id = Column(UUID(as_uuid=True), nullable=False)
+  deal_id = Column(UUID(as_uuid=True))
 
 class Address(Base):
   __tablename__ = 'address'

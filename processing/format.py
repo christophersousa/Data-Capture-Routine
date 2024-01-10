@@ -75,13 +75,12 @@ def format_address(responses) -> list:
     return result_list
 
 def format_resume(response) -> list:
-    deal_id_transformer = transform_uuid(response['deal_id'])
     obj={
         'text': response['text'],
         'report': response['user_id'] or None,
         'date_create': response['date'],
         'date_update': response['date'],
-        'deal_id': uuid.UUID(deal_id_transformer),
+        'deal_id': response['deal_id'],
     }
     data = create_dataframe([obj])
     first_row = data.iloc[0].to_dict()
