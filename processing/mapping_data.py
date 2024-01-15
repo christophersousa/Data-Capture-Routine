@@ -40,7 +40,7 @@ def mapping_organization(organizations, session):
         organization_contact_rl = format_organization_contact_rl(organization_json, contact_json)
         add_contact_organization_rl(session, organization_contact_rl)
     # address
-    if(adr_json):
+    if(adr_json and organization_json):
       organization_address_rl = format_organization_address_rl(organization_json, adr_json)
       add_address_organization_rl(session, organization_address_rl)
 
@@ -61,7 +61,6 @@ def mapping_deal(deals, session):
           add_deals_organization_rl(deal_organization)
         else:
           print(f'\n--------- Organization not found: {organization_id} ---------')
-
 
 def mapping_activities(activities, session):
   for activitie in activities:
