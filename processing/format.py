@@ -102,6 +102,26 @@ def format_resume(response) -> list:
     first_row = data.iloc[0].to_dict()
     return first_row
 
+def format_organization_contact_rl(organization, contact):
+    obj_organization_contact_rl = {
+      "contact_id": contact['id'],
+      "organization_id": organization['id'],
+      "is_active": True,
+      "date_create": organization['date_create'],
+      "date_update": organization['date_update']
+    }
+    return format_object_dataframe(obj_organization_contact_rl)
+
+def format_organization_address_rl(organization, address):
+    obj_organization_address_rl = {
+      "address_id": address['id'],
+      "organization_id": organization['id'],
+      "is_active": True,
+      "date_create": organization['date_create'],
+      "date_update": organization['date_update']
+    }
+    return format_object_dataframe(obj_organization_address_rl)
+
 def format_object_dataframe(obj):
     data = create_dataframe([obj])
     first_row = data.iloc[0].to_dict()

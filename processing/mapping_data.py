@@ -1,7 +1,7 @@
-from processing.pesist_data import add_address, add_contact, add_deal, add_organization, add_resume, add_address_organization_rl
-from processing.format import format_address, format_organization, format_deals, format_resume, format_object_dataframe
+from processing.pesist_data import add_address, add_contact, add_deal, add_organization, add_resume, add_address_organization_rl, add_contact_organization_rl
+from processing.format import format_address, format_organization, format_deals, format_resume, format_organization_address_rl, format_organization_contact_rl
 from processing.requests_datas import request_contact_name
-from tables.entity import Deals, OrganizationAddressRl
+from tables.entity import Deals
 
 def mapping_deal(deals, session):
   for deal in deals:
@@ -34,14 +34,12 @@ def mapping_organization(organizations, session):
     organization_pesist = add_organization(session, data)
     organization_json = organization_pesist.as_dict()
     # Persist relationship
-    obj_organization_address_rl = {
-      "address_id": adr_json['id'],
-      "organization_id": organization_json['id'],
-      "is_active": True,
-      "date_create": organization_json['date_create'],
-      "date_update": organization_json['date_update']
-    }
-    organization_address_rl = format_object_dataframe(obj_organization_address_rl)
+    # Contact
+    for contact_json in list_contact_pesist:
+      organization_contact_rl = format_organization_contact_rl(organization_json, contact_json)
+      add_contact_organization_rl(session, organization_contact_rl)
+    # address
+    organization_address_rl = format_organization_address_rl(organization_json, adr_json)
     add_address_organization_rl(session, organization_address_rl)
 
 
