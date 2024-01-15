@@ -1,5 +1,6 @@
 from sqlite3 import IntegrityError
 from tables.entity import Rating, Deals, Organization, Resume, Contact, Address
+from utils.handles import handle_duplicate_contact
 
 def add_rating(session, row):
     try:
@@ -58,6 +59,12 @@ def add_contact(session, row):
         print("Error adding contact:", e)
         session.rollback()
     except Exception as e:
+        session.rollback()
+        if "unique constraint" in str(e.orig):
+           handle_duplicate_contact(session, row)
+        else:
+            print("Error adding contact:", e)
+            session.rollback()
         print("Other error:", e)
         session.rollback()
 
