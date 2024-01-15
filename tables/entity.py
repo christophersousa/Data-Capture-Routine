@@ -1,6 +1,6 @@
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, class_mapper
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
 Base = declarative_base()
@@ -44,6 +44,8 @@ class Address(Base):
   lon  = Column(String)
   date_create = Column(String)
   date_update = Column(String)
+  def as_dict(self):
+        return {column.key: getattr(self, column.key) for column in class_mapper(self.__class__).mapped_table.c}
 
 class Organization(Base):
   __tablename__ = 'organization'
@@ -53,6 +55,10 @@ class Organization(Base):
   date_create = Column(String)
   date_update = Column(String)
   document = Column(String)
+  # Correção na definição da relação
+  addresses = relationship('OrganizationAddressRl', back_populates='organization', cascade='all, delete-orphan')
+  def as_dict(self):
+        return {column.key: getattr(self, column.key) for column in class_mapper(self.__class__).mapped_table.c}
 
 class Contact(Base):
   __tablename__ = 'contact'
@@ -63,19 +69,25 @@ class Contact(Base):
   email = Column(String)
   date_create = Column(String)
   date_update = Column(String)
+  def as_dict(self):
+        return {column.key: getattr(self, column.key) for column in class_mapper(self.__class__).mapped_table.c}
 
 #  Table relationship
   
 #  Organization
-# class OrganizationAddressRl(Base):
-#   __tablename__ = 'organization_address_rl'
-#   address_id = Column(UUID(as_uuid=True), ForeignKey('address.id'))
-#   organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'))
-#   is_active = Column(Boolean)
-#   date_create = Column(String)
-#   date_update = Column(String)
-#   address = relationship("Address", back_populates="address")
-#   organization = relationship("Organization", back_populates="organization")
+class OrganizationAddressRl(Base):
+  __tablename__ = 'organization_address_rl'
+  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
+  address_id = Column(UUID(as_uuid=True), ForeignKey('address.id'))
+  organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'))
+  is_active = Column(Boolean)
+  date_create = Column(String)
+  date_update = Column(String)
+  # Relations
+  organization = relationship('Organization', back_populates='addresses')
+  address = relationship('Address') 
+
+
 
 # class OrganizationContactRl(Base):
 #   __tablename__ = 'organization_contact_rl'

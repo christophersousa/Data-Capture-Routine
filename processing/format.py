@@ -101,3 +101,8 @@ def format_resume(response) -> list:
     data = create_dataframe([obj])
     first_row = data.iloc[0].to_dict()
     return first_row
+
+def format_object_dataframe(obj):
+    data = create_dataframe([obj])
+    first_row = data.iloc[0].to_dict()
+    return first_row
