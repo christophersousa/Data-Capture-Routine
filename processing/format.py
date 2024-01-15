@@ -20,7 +20,6 @@ def format_deals(response) -> list:
             'organization': organization,
             'date_create': response['created_at'],
             'date_update': response['updated_at'],
-            'rating_id': None,
         }
     data = create_dataframe([obj])
     first_row = data.iloc[0].to_dict()

@@ -9,14 +9,13 @@ Base = declarative_base()
 class Deals(Base):
   __tablename__ = 'deal'
   id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-  deal_rd_id = Column(String, nullable=False)
+  deal_rd_id = Column(String, nullable=False, unique=True)
   name  = Column(String)
   pipeline = Column(String)
   stage = Column(String)
   date_create = Column(String)
   date_update = Column(String)
   closed_at = Column(String)
-  rating_id = Column(UUID(as_uuid=True))
   def as_dict(self):
         return {column.key: getattr(self, column.key) for column in class_mapper(self.__class__).mapped_table.c}
 

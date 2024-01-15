@@ -1,4 +1,4 @@
-from tables.entity import Contact, Organization
+from tables.entity import Contact, Organization, Deals
 from sqlalchemy.orm.exc import NoResultFound
 
 def handle_duplicate_contact(session, row):
@@ -14,6 +14,13 @@ def handle_duplicate_organization(session, row):
         update_existing(session, existing_contact, row)
     except NoResultFound:
         print("No existing Organization found for unique field:", row['organization_rd_id'])
+
+def handle_duplicate_deal(session, row):
+    try:
+        existing_contact = session.query(Deals).filter_by(deal_rd_id=row['deal_rd_id']).one()
+        update_existing(session, existing_contact, row)
+    except NoResultFound:
+        print("No existing Deals found for unique field:", row['deal_rd_id'])
 
 
 def update_existing(session, existing_contact, new_data):

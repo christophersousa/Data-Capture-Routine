@@ -50,16 +50,17 @@ def mapping_deal(deals, session):
     organization = data['organization']
     del data['organization']
     deal_persist = add_deal(session, data)
-    deal_json = deal_persist.as_dict()
-    if organization:
-      organization_id = organization['id']
-      print(f'\n--------- Relationship between deal with id: and organization with id:{organization_id} ---------')
-      response = session.query(Organization).filter_by(organization_rd_id=organization['id']).first()
-      if(response):
-        deal_organization = format_organization_deals_rl(response.id, deal_json)
-        add_deals_organization_rl(deal_organization)
-      else:
-        print(f'\n--------- Organization not found: {organization_id} ---------')
+    if deal_persist:
+      deal_json = deal_persist.as_dict()
+      if organization:
+        organization_id = organization['id']
+        print(f'\n--------- Relationship between deal with id: and organization with id:{organization_id} ---------')
+        response = session.query(Organization).filter_by(organization_rd_id=organization['id']).first()
+        if(response):
+          deal_organization = format_organization_deals_rl(response.id, deal_json)
+          add_deals_organization_rl(deal_organization)
+        else:
+          print(f'\n--------- Organization not found: {organization_id} ---------')
 
 
 def mapping_activities(activities, session):
