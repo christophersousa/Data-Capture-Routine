@@ -56,7 +56,7 @@ class Organization(Base):
 
 class Contact(Base):
   __tablename__ = 'contact'
-  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
+  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
   contact_rd_id = Column(String)
   name  = Column(String)
   phone = Column(String)

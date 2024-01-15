@@ -28,7 +28,7 @@ def request_organization(page:int):
   url = f"{credentials.url}/organizations"
   params = {
     'token': credentials.token,
-    'limit': 200,
+    'limit': 20,
     'page': page
   }
   response = requests.get(url=url,headers=headers,params=params)
@@ -58,13 +58,12 @@ def request_activities(page:int, dateStart:str, dateEnd:str):
   return response.json()
 
 
-def request_contacts(page:int, q:str):
-  print(f"Request contacts page: {page}")
+def request_contacts(q:str):
+  print(f"Request contacts")
   url = f"{credentials.url}/contacts"
   params = {
     'token': credentials.token,
     'limit': 200,
-    'page': page,
     'q': q
   }
   response = requests.get(url=url,headers=headers,params=params)
