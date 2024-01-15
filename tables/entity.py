@@ -15,7 +15,10 @@ class Deals(Base):
   stage = Column(String)
   date_create = Column(String)
   date_update = Column(String)
+  closed_at = Column(String)
   rating_id = Column(UUID(as_uuid=True))
+  def as_dict(self):
+        return {column.key: getattr(self, column.key) for column in class_mapper(self.__class__).mapped_table.c}
 
 class Rating(Base):
   __tablename__ = 'rating'
@@ -58,6 +61,7 @@ class Organization(Base):
   # Correção na definição da relação
   addresses = relationship('OrganizationAddressRl', back_populates='organization', cascade='all, delete-orphan')
   contacts = relationship('OrganizationContactRl', back_populates='organization', cascade='all, delete-orphan')
+  deals = relationship('OrganizationDealsRl', back_populates='organization', cascade='all, delete-orphan')
   def as_dict(self):
         return {column.key: getattr(self, column.key) for column in class_mapper(self.__class__).mapped_table.c}
 
@@ -100,15 +104,17 @@ class OrganizationContactRl(Base):
   organization = relationship('Organization', back_populates='contacts')
   contact = relationship('Contact') 
 
-# class OrganizationDealsRl(Base):
-#   __tablename__ = 'organization_deal_rl'
-#   organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'))
-#   deal_id = Column(UUID(as_uuid=True), ForeignKey('deal.id'))
-#   is_active = Column(Boolean)
-#   date_create = Column(String)
-#   date_update = Column(String)
-#   organization = relationship("Organization", back_populates="organization")
-#   deal = relationship("Deals", back_populates="deal")
+class OrganizationDealsRl(Base):
+  __tablename__ = 'organization_deal_rl'
+  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
+  organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'))
+  deal_id = Column(UUID(as_uuid=True), ForeignKey('deal.id'))
+  is_active = Column(Boolean)
+  date_create = Column(String)
+  date_update = Column(String)
+   # Relations
+  organization = relationship('Organization', back_populates='deals')
+  deal = relationship('Deals')
 
 # #  User
 # class UserAddressRl(Base):

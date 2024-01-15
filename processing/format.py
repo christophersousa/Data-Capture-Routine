@@ -1,16 +1,23 @@
 from processing.data_transform import create_dataframe, transform_uuid
 from utils.list_state import list_state_code
+from utils.stages import getPipeline
 
 # List state code
 list_state_code_uppercase = {state.upper(): details for state, details in list_state_code.items()}
 
 def format_deals(response) -> list:
-    id_transformer = transform_uuid(response['id'])
+    stage = response['deal_stage']['id'] or None
+    pipeline = getPipeline(stage)
+    organization =  None
+    if response.get('organization'):
+        organization = response['organization']
     obj = {
             'deal_rd_id': response['id'],
             'name': response['name'],
-            'pipeline': ' ',
-            'stage': ' ',
+            'pipeline': pipeline,
+            'stage': stage,
+            'closed_at': response['closed_at'] or None,
+            'organization': organization,
             'date_create': response['created_at'],
             'date_update': response['updated_at'],
             'rating_id': None,
@@ -119,6 +126,16 @@ def format_organization_address_rl(organization, address):
       "is_active": True,
       "date_create": organization['date_create'],
       "date_update": organization['date_update']
+    }
+    return format_object_dataframe(obj_organization_address_rl)
+
+def format_organization_deals_rl(organization_id, deals):
+    obj_organization_address_rl = {
+      "address_id": deals['id'],
+      "organization_id": organization_id,
+      "is_active": True,
+      "date_create": deals['date_create'],
+      "date_update": deals['date_update']
     }
     return format_object_dataframe(obj_organization_address_rl)
 

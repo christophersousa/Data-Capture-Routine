@@ -1,5 +1,5 @@
 from sqlite3 import IntegrityError
-from tables.entity import Rating, Deals, Organization, Resume, Contact, Address, OrganizationAddressRl, OrganizationContactRl
+from tables.entity import Rating, Deals, Organization, Resume, Contact, Address, OrganizationAddressRl, OrganizationContactRl, OrganizationDealsRl
 from utils.handles import handle_duplicate_contact, handle_duplicate_organization
 
 def add_rating(session, row):
@@ -19,6 +19,7 @@ def add_deal(session, row):
         deals = Deals(**row)
         session.add(deals)
         session.commit()
+        return deals
     except IntegrityError as e:
         print("Error adding deals:", e)
         session.rollback()
@@ -109,6 +110,18 @@ def add_contact_organization_rl(session, row):
         session.commit()
     except IntegrityError as e:
         print("Error adding organizationContactRl:", e)
+        session.rollback()
+    except Exception as e:
+        print("Other error:", e)
+        session.rollback()
+
+def add_deals_organization_rl(session, row):
+    try:
+        organizationDealstRl = OrganizationDealsRl(**row)
+        session.add(organizationDealstRl)
+        session.commit()
+    except IntegrityError as e:
+        print("Error adding organizationDealstRl:", e)
         session.rollback()
     except Exception as e:
         print("Other error:", e)
