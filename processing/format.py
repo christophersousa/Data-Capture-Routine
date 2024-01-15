@@ -1,5 +1,8 @@
 from processing.data_transform import create_dataframe, transform_uuid
-import uuid
+from utils.list_state import list_state_code
+
+# List state code
+list_state_code_uppercase = {state.upper(): details for state, details in list_state_code.items()}
 
 def format_deals(response) -> list:
     id_transformer = transform_uuid(response['id'])
@@ -52,34 +55,40 @@ def format_contact(response) -> list:
     # Get the first phone and email (if available)
     phone = phones[0]['phone'] if phones else '-'
     email = emails[0]['email'] if emails else '-'
-    obj=[{
+    obj={
         'contact_rd_id': response['id'],
         'name': response['name'] or "-",
         'phone': phone,
         'email': email,
         'date_create': response['created_at'],
         'date_update': response['updated_at']
-    }]
-    data = create_dataframe(obj)
+    }
+    data = create_dataframe([obj])
     first_row = data.iloc[0].to_dict()
     return first_row
 
-def format_address(responses) -> list:
-    result_list = []
+def format_address(responses, date_created, date_updated) -> list:
+    obj={
+        'cep': None,
+        'state': None,
+        'state_code': None,
+        'lat': None,
+        'lon': None,
+        'date_create': date_created,
+        'date_update': date_updated
+    }
     if len(responses) > 0:
         for response in responses:
-            obj={
-                'id': response['id'],
-                'cep': response['cep'],
-                'state': response['state'],
-                'state_code': response['state_code'],
-                'lat': response['lat'],
-                'lon': response['lon'],
-                'date_create': response['created_at'],
-                'date_update': response['updated_at'],
-            }
-            result_list.append(obj)
-    return result_list
+            if(response['custom_field']['label'] == 'Estado'):
+                obj['state'] = response['value']
+                state_code = list_state_code_uppercase.get(str(response['value']).upper())
+                code =  state_code['sigla'] if state_code else None
+                obj['state_code'] = code
+            elif(response['custom_field']['label'] == 'CEP'):
+                obj['cep'] = response['value']
+    data = create_dataframe([obj])
+    first_row = data.iloc[0].to_dict()
+    return first_row
 
 def format_resume(response) -> list:
     obj={

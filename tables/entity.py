@@ -36,7 +36,7 @@ class Resume(Base):
 
 class Address(Base):
   __tablename__ = 'address'
-  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
+  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
   cep = Column(String)
   state  = Column(String)
   state_code  = Column(String)
@@ -48,7 +48,7 @@ class Address(Base):
 class Organization(Base):
   __tablename__ = 'organization'
   id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-  organization_rd_id = Column(String)
+  organization_rd_id = Column(String, unique=True, nullable=False)
   name  = Column(String)
   date_create = Column(String)
   date_update = Column(String)
@@ -57,7 +57,7 @@ class Organization(Base):
 class Contact(Base):
   __tablename__ = 'contact'
   id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-  contact_rd_id = Column(String)
+  contact_rd_id = Column(String, unique=True, nullable=False)
   name  = Column(String)
   phone = Column(String)
   email = Column(String)
