@@ -1,4 +1,6 @@
-from api.api import request_deals, request_organization, request_activities
+from api.api import request_contacts, request_deals, request_organization, request_activities
+from processing.format import format_contact
+
 def list_deals(dateStart:str, dateEnd:str):
     deals_list = []
     page = 1
@@ -52,3 +54,8 @@ def list_activities(dateStart:str, dateEnd:str):
         except Exception as e:
           print(f'Error in request_organization in page {page}. \nError: {e}')
     return activities_list
+
+def request_contact_name(name:str):
+  response = request_contacts(name)
+  response_format = format_contact(response['contacts'][0])
+  return response_format
