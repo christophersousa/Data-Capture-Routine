@@ -19,13 +19,13 @@ class Deals(Base):
   def as_dict(self):
         return {column.key: getattr(self, column.key) for column in class_mapper(self.__class__).mapped_table.c}
 
-class Rating(Base):
-  __tablename__ = 'rating'
-  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
-  rank = Column(Integer, nullable=False)
-  name  = Column(String)
-  date_create = Column(String)
-  date_update = Column(String)
+# class Rating(Base):
+#   __tablename__ = 'rating'
+#   id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
+#   rank = Column(Integer, nullable=False)
+#   name  = Column(String)
+#   date_create = Column(String)
+#   date_update = Column(String)
 
 class Resume(Base):
   __tablename__ = 'resume'
@@ -67,7 +67,7 @@ class Organization(Base):
 class Contact(Base):
   __tablename__ = 'contact'
   id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-  contact_rd_id = Column(String, unique=True, nullable=False)
+  contact_rd_id = Column(String, nullable=False)
   name  = Column(String)
   phone = Column(String)
   email = Column(String)

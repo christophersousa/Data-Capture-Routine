@@ -58,7 +58,7 @@ def mapping_deal(deals, session):
         response = session.query(Organization).filter_by(organization_rd_id=organization['id']).first()
         if(response):
           deal_organization = format_organization_deals_rl(response.id, deal_json)
-          add_deals_organization_rl(deal_organization)
+          add_deals_organization_rl(session, deal_organization)
         else:
           print(f'\n--------- Organization not found: {organization_id} ---------')
 

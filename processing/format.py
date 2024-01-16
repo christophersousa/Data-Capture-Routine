@@ -58,8 +58,8 @@ def format_contact(response) -> list:
     emails = response.get('emails', [])
 
     # Get the first phone and email (if available)
-    phone = phones[0]['phone'] if phones else '-'
-    email = emails[0]['email'] if emails else '-'
+    phone = phones[0]['phone'] if phones else None
+    email = emails[0]['email'] if emails else None
     obj={
         'contact_rd_id': response['id'],
         'name': response['name'] or "-",
