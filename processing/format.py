@@ -11,6 +11,9 @@ def format_deals(response) -> list:
     organization =  None
     if response.get('organization'):
         organization = response['organization']
+    user =  None
+    if response.get('user'):
+        user = response['user']
     obj = {
             'deal_rd_id': response['id'],
             'name': response['name'],
@@ -18,18 +21,23 @@ def format_deals(response) -> list:
             'stage': stage,
             'closed_at': response['closed_at'] or None,
             'organization': organization,
+            'user': user,
             'date_create': response['created_at'],
             'date_update': response['updated_at'],
         }
     return format_object_dataframe(obj)
 
 def format_organization(response) -> list:
+    user =  None
+    if response.get('user'):
+        user = response['user']
     obj={
         'organization_rd_id': response['id'],
         'name': response['name'] or None,
         'date_create': response['created_at'],
         'date_update': response['updated_at'],
         'document': None,
+        'user': user,
         'contacts': response['contacts'],
         'custom_fields': response['custom_fields'],
     }
@@ -143,6 +151,26 @@ def format_organization_deals_rl(organization_id, deals):
       "date_update": deals['date_update']
     }
     return format_object_dataframe(obj_organization_address_rl)
+
+def format_user_deals_rl(user_id, deals):
+    obj= {
+      "deal_id": deals['id'],
+      "user_id": user_id,
+      "is_active": True,
+      "date_create": deals['date_create'],
+      "date_update": deals['date_update']
+    }
+    return format_object_dataframe(obj)
+
+def format_user_address_rl(user_id, address):
+    obj= {
+      "address_id": address['id'],
+      "user_id": user_id,
+      "is_active": True,
+      "date_create": address['date_create'],
+      "date_update": address['date_update']
+    }
+    return format_object_dataframe(obj)
 
 def format_object_dataframe(obj):
     data = create_dataframe([obj])

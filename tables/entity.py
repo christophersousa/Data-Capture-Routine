@@ -45,8 +45,12 @@ class Users(Base):
   token  = Column(String)
   date_create = Column(String)
   date_update = Column(String)
-  is_active  = Column(bool)
+  is_active  = Column(Boolean)
   permission = Column(String)
+  addresses_rl = relationship('UserAddressRl', back_populates='user_app', cascade='all, delete-orphan')
+  deals = relationship('UserDealRl', back_populates='user_app', cascade='all, delete-orphan')
+  def as_dict(self):
+        return {column.key: getattr(self, column.key) for column in class_mapper(self.__class__).mapped_table.c}
 
 class Address(Base):
   __tablename__ = 'address'
@@ -128,20 +132,24 @@ class OrganizationDealsRl(Base):
   deal = relationship('Deals')
 
 # #  User
-# class UserAddressRl(Base):
-#   __tablename__ = 'user_address_rl'
-#   address_id = Column(UUID(as_uuid=True), ForeignKey('address.id'))
-#   contact_id = Column(UUID(as_uuid=True), ForeignKey('contact.id'))
-#   is_active = Column(Boolean)
-#   date_create = Column(String)
-#   date_update = Column(String)
-#   address = relationship("Address", back_populates="address")
-#   contact = relationship("Contact", back_populates="contact")
+class UserAddressRl(Base):
+  __tablename__ = 'user_address_rl'
+  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
+  user_id = Column(UUID(as_uuid=True), ForeignKey('user_app.id'))
+  address_id = Column(UUID(as_uuid=True), ForeignKey('address.id'))
+  is_active = Column(Boolean)
+  date_create = Column(String)
+  date_update = Column(String)
+  user_app = relationship("Users", back_populates="addresses_rl")
+  address = relationship('Address')
 
-# class UserDealRl(Base):
-#   __tablename__ = 'user_address_rl'
-#   user_id = Column(UUID(as_uuid=True), nullable=False)
-#   deal_id = Column(UUID(as_uuid=True), nullable=False)
-#   is_active = Column(Boolean)
-#   date_create = Column(String)
-#   date_update = Column(String)
+class UserDealRl(Base):
+  __tablename__ = 'user_deal_rl'
+  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
+  user_id = Column(UUID(as_uuid=True), ForeignKey('user_app.id'))
+  deal_id = Column(UUID(as_uuid=True), ForeignKey('deal.id'))
+  is_active = Column(Boolean)
+  date_create = Column(String)
+  date_update = Column(String)
+  user_app = relationship('Users', back_populates='deals')
+  deal = relationship('Deals')
