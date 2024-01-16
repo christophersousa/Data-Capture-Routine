@@ -75,23 +75,6 @@ def request_contacts(q:str):
     }
   return response.json()
 
-def request_contacts(q:str):
-  print(f"Request contacts")
-  url = f"{credentials.url}/contacts"
-  params = {
-    'token': credentials.token,
-    'limit': 200,
-    'q': q
-  }
-  response = requests.get(url=url,headers=headers,params=params)
-  if(response.status_code != 200):
-     return{
-      "total": 0,
-      "has_more": False,
-      "contacts": []
-    }
-  return response.json()
-
 def request_users():
   print(f"Request contacts")
   url = f"{credentials.url}/users"

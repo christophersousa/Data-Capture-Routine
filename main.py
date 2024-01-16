@@ -1,8 +1,8 @@
 from xml.dom import ValidationErr
 import datetime
 from api.api_validation_token import validation_token
-from processing.requests_datas import list_deals, list_organizations,list_activities
-from processing.mapping_data import mapping_deal, mapping_activities, mapping_organization
+from processing.requests_datas import list_deals, list_organizations, list_activities, request_users_app
+from processing.mapping_data import mapping_deal, mapping_activities, mapping_organization, mapping_users
 from credentials import DATABASE_URL
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -23,6 +23,8 @@ def Main():
     print(f"\n---------- date start {dateStart} date end {dateEnd}\n")
 
     # Requests
+    print(f"\n---------- Request Users ----------\n")
+    users = request_users_app()
     print(f"\n---------- Request Deals ----------\n")
     deals = list_deals(dateStart, dateEnd)
     print(f"\n---------- Request Resumes ----------\n")
@@ -40,6 +42,8 @@ def Main():
     session = Session()
 
     # Register datas
+    print(f"\n---------- Register Organization ----------\n")
+    mapping_users(users,session)
     print(f"\n---------- Register Organization ----------\n")
     mapping_organization(organizations,session)
     print(f"\n---------- Register Deals ----------\n")
