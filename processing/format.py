@@ -24,6 +24,7 @@ def format_deals(response) -> list:
             'user': user,
             'date_create': response['created_at'],
             'date_update': response['updated_at'],
+            'visit_id': None
         }
     return format_object_dataframe(obj)
 
@@ -70,7 +71,7 @@ def format_contact(response) -> list:
     email = emails[0]['email'] if emails else None
     obj={
         'contact_rd_id': response['id'],
-        'name': response['name'] or "-",
+        'name': response['name'] or None,
         'phone': phone,
         'email': email,
         'date_create': response['created_at'],
@@ -102,7 +103,7 @@ def format_address(responses, date_created, date_updated) -> list:
 def format_resume(response) -> list:
     obj={
         'text': response['text'],
-        'report': response['user_id'] or None,
+        'reporter': response['user_id'] or None,
         'date_create': response['date'],
         'date_update': response['date'],
         'deal_id': response['deal_id'],
