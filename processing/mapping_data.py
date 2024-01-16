@@ -35,7 +35,7 @@ def mapping_organization(organizations, session):
       organization_json = organization_pesist.as_dict()
     # Persist relationship
     # Contact
-    if(len(list_contact_pesist) > 0):
+    if(len(list_contact_pesist) > 0 and organization_json):
       for contact_json in list_contact_pesist:
         organization_contact_rl = format_organization_contact_rl(organization_json, contact_json)
         add_contact_organization_rl(session, organization_contact_rl)
@@ -71,7 +71,7 @@ def mapping_activities(activities, session):
     deal = session.query(Deals).filter_by(deal_rd_id=deal_rd_id).first()
     data['deal_id'] = None
     if deal:
-        print(f'--- Relação com Deal com id: {deal.id} ---')
+        print(f'--- Relação com Deal com id: {deal_rd_id} ---')
         data['deal_id'] = deal.id
     add_resume(session, data)
 
