@@ -36,6 +36,18 @@ class Resume(Base):
   date_update = Column(String)
   deal_id = Column(UUID(as_uuid=True))
 
+class Users(Base):
+  __tablename__ = 'user_app'
+  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
+  user_rd_id = Column(String, unique=True)
+  name = Column(String)
+  email  = Column(String)
+  token  = Column(String)
+  date_create = Column(String)
+  date_update = Column(String)
+  is_active  = Column(bool)
+  permission = Column(String)
+
 class Address(Base):
   __tablename__ = 'address'
   id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)

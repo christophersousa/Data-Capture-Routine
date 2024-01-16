@@ -1,5 +1,5 @@
-from processing.pesist_data import add_address, add_contact, add_deal, add_organization, add_resume, add_address_organization_rl, add_contact_organization_rl, add_deals_organization_rl
-from processing.format import format_address, format_organization, format_deals, format_resume, format_organization_address_rl, format_organization_contact_rl, format_organization_deals_rl
+from processing.pesist_data import add_address, add_contact, add_deal, add_organization, add_resume, add_address_organization_rl, add_contact_organization_rl, add_deals_organization_rl, add_users
+from processing.format import format_address, format_organization, format_deals, format_resume, format_organization_address_rl, format_organization_contact_rl, format_organization_deals_rl, format_users
 from processing.requests_datas import request_contact_name
 from tables.entity import Deals, Organization
 
@@ -74,6 +74,11 @@ def mapping_activities(activities, session):
         print(f'--- Relação com Deal com id: {deal_rd_id} ---')
         data['deal_id'] = deal.id
     add_resume(session, data)
+
+def mapping_users(users, session):
+  for user in users:
+    data = format_users(user)
+    add_users(session, data)
 
 
 

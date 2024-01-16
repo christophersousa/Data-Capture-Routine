@@ -99,9 +99,20 @@ def format_resume(response) -> list:
         'date_update': response['date'],
         'deal_id': response['deal_id'],
     }
-    data = create_dataframe([obj])
-    first_row = data.iloc[0].to_dict()
-    return first_row
+    return format_object_dataframe(obj)
+
+def format_users(response) -> list:
+    obj={
+        'user_rd_id': response['id'] or None,
+        'name': response['name'] or None,
+        'email': response['email'] or None,
+        'token': None,
+        'date_create': response['created_at'],
+        'date_update': response['updated_at'],
+        'is_active': response['active'],
+        'permission': 'user',
+    }
+    return format_object_dataframe(obj)
 
 def format_organization_contact_rl(organization, contact):
     obj_organization_contact_rl = {
