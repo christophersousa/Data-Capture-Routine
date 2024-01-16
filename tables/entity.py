@@ -16,6 +16,7 @@ class Deals(Base):
   date_create = Column(String)
   date_update = Column(String)
   closed_at = Column(String)
+  visit_id = Column(UUID(as_uuid=True))
   def as_dict(self):
         return {column.key: getattr(self, column.key) for column in class_mapper(self.__class__).mapped_table.c}
 
@@ -31,7 +32,7 @@ class Resume(Base):
   __tablename__ = 'resume'
   id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
   text = Column(String)
-  report  = Column(String)
+  reporter  = Column(String)
   date_create = Column(String)
   date_update = Column(String)
   deal_id = Column(UUID(as_uuid=True))
