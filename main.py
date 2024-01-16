@@ -40,12 +40,13 @@ def Main():
     session = Session()
 
     # Register datas
+    print(f"\n---------- Register Organization ----------\n")
+    mapping_organization(organizations,session)
     print(f"\n---------- Register Deals ----------\n")
     mapping_deal(deals,session)
     print(f"\n---------- Register Resume ----------\n")
     mapping_activities(resume,session)
-    print(f"\n---------- Register Organization ----------\n")
-    mapping_organization(organizations,session)
+    
   except ValidationErr:
     print("Incorrect validation, check authentication token")
   except Exception as e:
