@@ -11,6 +11,9 @@ def format_deals(response) -> list:
     organization =  None
     if response.get('organization'):
         organization = response['organization']
+    user =  None
+    if response.get('user'):
+        user = response['user']
     obj = {
             'deal_rd_id': response['id'],
             'name': response['name'],
@@ -18,18 +21,24 @@ def format_deals(response) -> list:
             'stage': stage,
             'closed_at': response['closed_at'] or None,
             'organization': organization,
+            'user': user,
             'date_create': response['created_at'],
             'date_update': response['updated_at'],
+            'visit_id': None
         }
     return format_object_dataframe(obj)
 
 def format_organization(response) -> list:
+    user =  None
+    if response.get('user'):
+        user = response['user']
     obj={
         'organization_rd_id': response['id'],
         'name': response['name'] or None,
         'date_create': response['created_at'],
         'date_update': response['updated_at'],
         'document': None,
+        'user': user,
         'contacts': response['contacts'],
         'custom_fields': response['custom_fields'],
     }
@@ -62,7 +71,7 @@ def format_contact(response) -> list:
     email = emails[0]['email'] if emails else None
     obj={
         'contact_rd_id': response['id'],
-        'name': response['name'] or "-",
+        'name': response['name'] or None,
         'phone': phone,
         'email': email,
         'date_create': response['created_at'],
@@ -94,14 +103,25 @@ def format_address(responses, date_created, date_updated) -> list:
 def format_resume(response) -> list:
     obj={
         'text': response['text'],
-        'report': response['user_id'] or None,
+        'reporter': response['user_id'] or None,
         'date_create': response['date'],
         'date_update': response['date'],
         'deal_id': response['deal_id'],
     }
-    data = create_dataframe([obj])
-    first_row = data.iloc[0].to_dict()
-    return first_row
+    return format_object_dataframe(obj)
+
+def format_users(response) -> list:
+    obj={
+        'user_rd_id': response['id'] or None,
+        'name': response['name'] or None,
+        'email': response['email'] or None,
+        'token': None,
+        'date_create': response['created_at'],
+        'date_update': response['updated_at'],
+        'is_active': response['active'],
+        'permission': 'user',
+    }
+    return format_object_dataframe(obj)
 
 def format_organization_contact_rl(organization, contact):
     obj_organization_contact_rl = {
@@ -132,6 +152,26 @@ def format_organization_deals_rl(organization_id, deals):
       "date_update": deals['date_update']
     }
     return format_object_dataframe(obj_organization_address_rl)
+
+def format_user_deals_rl(user_id, deals):
+    obj= {
+      "deal_id": deals['id'],
+      "user_id": user_id,
+      "is_active": True,
+      "date_create": deals['date_create'],
+      "date_update": deals['date_update']
+    }
+    return format_object_dataframe(obj)
+
+def format_user_address_rl(user_id, address):
+    obj= {
+      "address_id": address['id'],
+      "user_id": user_id,
+      "is_active": True,
+      "date_create": address['date_create'],
+      "date_update": address['date_update']
+    }
+    return format_object_dataframe(obj)
 
 def format_object_dataframe(obj):
     data = create_dataframe([obj])

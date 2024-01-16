@@ -16,6 +16,7 @@ class Deals(Base):
   date_create = Column(String)
   date_update = Column(String)
   closed_at = Column(String)
+  visit_id = Column(UUID(as_uuid=True))
   def as_dict(self):
         return {column.key: getattr(self, column.key) for column in class_mapper(self.__class__).mapped_table.c}
 
@@ -31,10 +32,26 @@ class Resume(Base):
   __tablename__ = 'resume'
   id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
   text = Column(String)
-  report  = Column(String)
+  reporter  = Column(String)
   date_create = Column(String)
   date_update = Column(String)
   deal_id = Column(UUID(as_uuid=True))
+
+class Users(Base):
+  __tablename__ = 'user_app'
+  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
+  user_rd_id = Column(String, unique=True)
+  name = Column(String)
+  email  = Column(String)
+  token  = Column(String)
+  date_create = Column(String)
+  date_update = Column(String)
+  is_active  = Column(Boolean)
+  permission = Column(String)
+  addresses_rl = relationship('UserAddressRl', back_populates='user_app', cascade='all, delete-orphan')
+  deals = relationship('UserDealRl', back_populates='user_app', cascade='all, delete-orphan')
+  def as_dict(self):
+        return {column.key: getattr(self, column.key) for column in class_mapper(self.__class__).mapped_table.c}
 
 class Address(Base):
   __tablename__ = 'address'
@@ -81,9 +98,8 @@ class Contact(Base):
 #  Organization
 class OrganizationAddressRl(Base):
   __tablename__ = 'organization_address_rl'
-  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-  address_id = Column(UUID(as_uuid=True), ForeignKey('address.id'))
-  organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'))
+  address_id = Column(UUID(as_uuid=True), ForeignKey('address.id'), primary_key=True)
+  organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'), primary_key=True)
   is_active = Column(Boolean)
   date_create = Column(String)
   date_update = Column(String)
@@ -93,9 +109,8 @@ class OrganizationAddressRl(Base):
 
 class OrganizationContactRl(Base):
   __tablename__ = 'organization_contact_rl'
-  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-  organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'))
-  contact_id = Column(UUID(as_uuid=True), ForeignKey('contact.id'))
+  organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'), primary_key=True)
+  contact_id = Column(UUID(as_uuid=True), ForeignKey('contact.id'), primary_key=True)
   is_active = Column(Boolean)
   date_create = Column(String)
   date_update = Column(String)
@@ -105,9 +120,8 @@ class OrganizationContactRl(Base):
 
 class OrganizationDealsRl(Base):
   __tablename__ = 'organization_deal_rl'
-  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-  organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'))
-  deal_id = Column(UUID(as_uuid=True), ForeignKey('deal.id'))
+  organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'), primary_key=True)
+  deal_id = Column(UUID(as_uuid=True), ForeignKey('deal.id'), primary_key=True)
   is_active = Column(Boolean)
   date_create = Column(String)
   date_update = Column(String)
@@ -116,20 +130,22 @@ class OrganizationDealsRl(Base):
   deal = relationship('Deals')
 
 # #  User
-# class UserAddressRl(Base):
-#   __tablename__ = 'user_address_rl'
-#   address_id = Column(UUID(as_uuid=True), ForeignKey('address.id'))
-#   contact_id = Column(UUID(as_uuid=True), ForeignKey('contact.id'))
-#   is_active = Column(Boolean)
-#   date_create = Column(String)
-#   date_update = Column(String)
-#   address = relationship("Address", back_populates="address")
-#   contact = relationship("Contact", back_populates="contact")
+class UserAddressRl(Base):
+  __tablename__ = 'user_address_rl'
+  user_id = Column(UUID(as_uuid=True), ForeignKey('user_app.id'), primary_key=True)
+  address_id = Column(UUID(as_uuid=True), ForeignKey('address.id'), primary_key=True)
+  is_active = Column(Boolean)
+  date_create = Column(String)
+  date_update = Column(String)
+  user_app = relationship("Users", back_populates="addresses_rl")
+  address = relationship('Address')
 
-# class UserDealRl(Base):
-#   __tablename__ = 'user_address_rl'
-#   user_id = Column(UUID(as_uuid=True), nullable=False)
-#   deal_id = Column(UUID(as_uuid=True), nullable=False)
-#   is_active = Column(Boolean)
-#   date_create = Column(String)
-#   date_update = Column(String)
+class UserDealRl(Base):
+  __tablename__ = 'user_deal_rl'
+  user_id = Column(UUID(as_uuid=True), ForeignKey('user_app.id'), primary_key=True)
+  deal_id = Column(UUID(as_uuid=True), ForeignKey('deal.id'), primary_key=True)
+  is_active = Column(Boolean)
+  date_create = Column(String)
+  date_update = Column(String)
+  user_app = relationship('Users', back_populates='deals')
+  deal = relationship('Deals')

@@ -1,5 +1,5 @@
 from sqlite3 import IntegrityError
-from tables.entity import Deals, Organization, Resume, Contact, Address, OrganizationAddressRl, OrganizationContactRl, OrganizationDealsRl
+from tables.entity import Deals, Organization, Resume, Contact, Address, OrganizationAddressRl, OrganizationContactRl, OrganizationDealsRl, Users, UserDealRl, UserAddressRl
 from utils.handles import handle_duplicate_contact, handle_duplicate_organization, handle_duplicate_deal
 
 # def add_rating(session, row):
@@ -59,6 +59,18 @@ def add_resume(session, row):
         session.commit()
     except IntegrityError as e:
         print("Error adding resume:", e)
+        session.rollback()
+    except Exception as e:
+        print("Other error:", e)
+        session.rollback()
+
+def add_users(session, row):
+    try:
+        usersApp = Users(**row)
+        session.add(usersApp)
+        session.commit()
+    except IntegrityError as e:
+        print("Error adding usersApp:", e)
         session.rollback()
     except Exception as e:
         print("Other error:", e)
@@ -128,6 +140,30 @@ def add_deals_organization_rl(session, row):
         session.commit()
     except IntegrityError as e:
         print("Error adding organizationDealstRl:", e)
+        session.rollback()
+    except Exception as e:
+        print("Other error:", e)
+        session.rollback()
+
+def add_deals_user_rl(session, row):
+    try:
+        userDealstRl = UserDealRl(**row)
+        session.add(userDealstRl)
+        session.commit()
+    except IntegrityError as e:
+        print("Error adding userDealstRl:", e)
+        session.rollback()
+    except Exception as e:
+        print("Other error:", e)
+        session.rollback()
+
+def add_address_user_rl(session, row):
+    try:
+        userAddresstRl = UserAddressRl(**row)
+        session.add(userAddresstRl)
+        session.commit()
+    except IntegrityError as e:
+        print("Error adding userAddresstRl:", e)
         session.rollback()
     except Exception as e:
         print("Other error:", e)

@@ -1,7 +1,7 @@
-from processing.pesist_data import add_address, add_contact, add_deal, add_organization, add_resume, add_address_organization_rl, add_contact_organization_rl, add_deals_organization_rl
-from processing.format import format_address, format_organization, format_deals, format_resume, format_organization_address_rl, format_organization_contact_rl, format_organization_deals_rl
+from processing.pesist_data import add_address, add_contact, add_deal, add_organization, add_resume, add_address_organization_rl, add_contact_organization_rl, add_deals_organization_rl, add_users, add_deals_user_rl, add_address_user_rl
+from processing.format import format_address, format_organization, format_deals, format_resume, format_organization_address_rl, format_organization_contact_rl, format_organization_deals_rl, format_users, format_user_deals_rl, format_user_address_rl
 from processing.requests_datas import request_contact_name
-from tables.entity import Deals, Organization
+from tables.entity import Deals, Organization, Users
 
 def mapping_organization(organizations, session):
   for organization in organizations:
@@ -9,7 +9,9 @@ def mapping_organization(organizations, session):
 
     # Data contact
     contacts = data['contacts']
-    del data['contacts']
+    user = data['user']
+    address = data['custom_fields']
+    del data['contacts'], data['user'], data['custom_fields']
     list_contact_pesist = []
     for contact in contacts:
       print(f"\n---------- Request Contact ----------\n")
@@ -20,8 +22,6 @@ def mapping_organization(organizations, session):
         list_contact_pesist.append(contact_json)
     
     # Data address
-    address = data['custom_fields']
-    del data['custom_fields']
     print(f"\n---------- Request Address ----------\n")
     format_company_address = format_address(address, data['date_create'], data['date_update'])
     adr = add_address(session, format_company_address)
@@ -34,6 +34,12 @@ def mapping_organization(organizations, session):
     if organization_pesist:
       organization_json = organization_pesist.as_dict()
     # Persist relationship
+    # User
+    if(user and adr_json):
+      response = session.query(Users).filter_by(user_rd_id=user['id']).first()
+      if(response):
+        user_address_rl = format_user_address_rl(response.id, adr_json)
+        add_address_user_rl(session, user_address_rl)
     # Contact
     if(len(list_contact_pesist) > 0 and organization_json):
       for contact_json in list_contact_pesist:
@@ -48,7 +54,8 @@ def mapping_deal(deals, session):
   for deal in deals:
     data = format_deals(deal)
     organization = data['organization']
-    del data['organization']
+    user = data['user']
+    del data['organization'], data['user']
     deal_persist = add_deal(session, data)
     if deal_persist:
       deal_json = deal_persist.as_dict()
@@ -59,6 +66,15 @@ def mapping_deal(deals, session):
         if(response):
           deal_organization = format_organization_deals_rl(response.id, deal_json)
           add_deals_organization_rl(session, deal_organization)
+        else:
+          print(f'\n--------- Organization not found: {organization_id} ---------')
+      if user:
+        user_id = user['id']
+        print(f'\n--------- Relationship between deal with id: and organization with id:{user_id} ---------')
+        response = session.query(Users).filter_by(user_rd_id=user['id']).first()
+        if(response):
+          deal_organization = format_user_deals_rl(response.id, deal_json)
+          add_deals_user_rl(session, deal_organization)
         else:
           print(f'\n--------- Organization not found: {organization_id} ---------')
 
@@ -74,6 +90,11 @@ def mapping_activities(activities, session):
         print(f'--- Relação com Deal com id: {deal_rd_id} ---')
         data['deal_id'] = deal.id
     add_resume(session, data)
+
+def mapping_users(users, session):
+  for user in users:
+    data = format_users(user)
+    add_users(session, data)
 
 
 

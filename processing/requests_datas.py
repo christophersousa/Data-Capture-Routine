@@ -1,4 +1,4 @@
-from api.api import request_contacts, request_deals, request_organization, request_activities
+from api.api import request_contacts, request_deals, request_organization, request_activities,request_users
 from processing.format import format_contact
 
 def list_deals(dateStart:str, dateEnd:str):
@@ -59,3 +59,7 @@ def request_contact_name(name:str):
   response = request_contacts(name)
   response_format = format_contact(response['contacts'][0])
   return response_format
+
+def request_users_app():
+  response = request_users()
+  return response['users']
