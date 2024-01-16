@@ -97,9 +97,8 @@ class Contact(Base):
 #  Organization
 class OrganizationAddressRl(Base):
   __tablename__ = 'organization_address_rl'
-  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-  address_id = Column(UUID(as_uuid=True), ForeignKey('address.id'))
-  organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'))
+  address_id = Column(UUID(as_uuid=True), ForeignKey('address.id'), primary_key=True)
+  organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'), primary_key=True)
   is_active = Column(Boolean)
   date_create = Column(String)
   date_update = Column(String)
@@ -109,9 +108,8 @@ class OrganizationAddressRl(Base):
 
 class OrganizationContactRl(Base):
   __tablename__ = 'organization_contact_rl'
-  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-  organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'))
-  contact_id = Column(UUID(as_uuid=True), ForeignKey('contact.id'))
+  organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'), primary_key=True)
+  contact_id = Column(UUID(as_uuid=True), ForeignKey('contact.id'), primary_key=True)
   is_active = Column(Boolean)
   date_create = Column(String)
   date_update = Column(String)
@@ -121,9 +119,8 @@ class OrganizationContactRl(Base):
 
 class OrganizationDealsRl(Base):
   __tablename__ = 'organization_deal_rl'
-  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-  organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'))
-  deal_id = Column(UUID(as_uuid=True), ForeignKey('deal.id'))
+  organization_id = Column(UUID(as_uuid=True), ForeignKey('organization.id'), primary_key=True)
+  deal_id = Column(UUID(as_uuid=True), ForeignKey('deal.id'), primary_key=True)
   is_active = Column(Boolean)
   date_create = Column(String)
   date_update = Column(String)
@@ -134,9 +131,8 @@ class OrganizationDealsRl(Base):
 # #  User
 class UserAddressRl(Base):
   __tablename__ = 'user_address_rl'
-  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-  user_id = Column(UUID(as_uuid=True), ForeignKey('user_app.id'))
-  address_id = Column(UUID(as_uuid=True), ForeignKey('address.id'))
+  user_id = Column(UUID(as_uuid=True), ForeignKey('user_app.id'), primary_key=True)
+  address_id = Column(UUID(as_uuid=True), ForeignKey('address.id'), primary_key=True)
   is_active = Column(Boolean)
   date_create = Column(String)
   date_update = Column(String)
@@ -145,9 +141,8 @@ class UserAddressRl(Base):
 
 class UserDealRl(Base):
   __tablename__ = 'user_deal_rl'
-  id = Column(UUID(as_uuid=True), primary_key=True, nullable=False, default=uuid.uuid4)
-  user_id = Column(UUID(as_uuid=True), ForeignKey('user_app.id'))
-  deal_id = Column(UUID(as_uuid=True), ForeignKey('deal.id'))
+  user_id = Column(UUID(as_uuid=True), ForeignKey('user_app.id'), primary_key=True)
+  deal_id = Column(UUID(as_uuid=True), ForeignKey('deal.id'), primary_key=True)
   is_active = Column(Boolean)
   date_create = Column(String)
   date_update = Column(String)
