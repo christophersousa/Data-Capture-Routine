@@ -21,23 +21,22 @@ def format_deals(response) -> list:
             'date_create': response['created_at'],
             'date_update': response['updated_at'],
         }
-    data = create_dataframe([obj])
-    first_row = data.iloc[0].to_dict()
-    return first_row
+    return format_object_dataframe(obj)
 
 def format_organization(response) -> list:
-    obj=[{
+    obj={
         'organization_rd_id': response['id'],
-        'name': response['name'] or " ",
+        'name': response['name'] or None,
         'date_create': response['created_at'],
         'date_update': response['updated_at'],
-        'document': " ",
+        'document': None,
         'contacts': response['contacts'],
         'custom_fields': response['custom_fields'],
-    }]
-    data = create_dataframe(obj)
-    first_row = data.iloc[0].to_dict()
-    return first_row
+    }
+    for data in response['custom_fields']:
+        if(data['custom_field']['label'] == 'CNPJ/CPF'):
+            obj['document'] = data['value']
+    return format_object_dataframe(obj)
 
 # def format_rating(responses) -> list:
 #     result_list = []
@@ -69,9 +68,7 @@ def format_contact(response) -> list:
         'date_create': response['created_at'],
         'date_update': response['updated_at']
     }
-    data = create_dataframe([obj])
-    first_row = data.iloc[0].to_dict()
-    return first_row
+    return format_object_dataframe(obj)
 
 def format_address(responses, date_created, date_updated) -> list:
     obj={
@@ -92,9 +89,7 @@ def format_address(responses, date_created, date_updated) -> list:
                 obj['state_code'] = code
             elif(response['custom_field']['label'] == 'CEP'):
                 obj['cep'] = response['value']
-    data = create_dataframe([obj])
-    first_row = data.iloc[0].to_dict()
-    return first_row
+    return format_object_dataframe(obj)
 
 def format_resume(response) -> list:
     obj={
