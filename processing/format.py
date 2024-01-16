@@ -125,7 +125,7 @@ def format_organization_address_rl(organization, address):
 
 def format_organization_deals_rl(organization_id, deals):
     obj_organization_address_rl = {
-      "address_id": deals['id'],
+      "deal_id": deals['id'],
       "organization_id": organization_id,
       "is_active": True,
       "date_create": deals['date_create'],
